@@ -26,10 +26,20 @@ async function run() {
     try {
         // Connect the client to the server	(optional starting in v4.7)
         // await client.connect();
+        const newCraftItemCollection = client.db("CraftItemCollection").collection("CraftItemCollection");
+        
 
+        app.get('/addCraftItem', async (req, res) => {
+            const cursor = newCraftItemCollection.find()
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+        
         app.post('/addCraftItem', async (req, res) => {
             const newCraftItem = req.body;
             console.log(newCraftItem);
+            const result = await newCraftItemCollection.insertOne(newCraftItem);
+            res.send(result);
         })
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
