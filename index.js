@@ -27,14 +27,20 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         // await client.connect();
         const newCraftItemCollection = client.db("CraftItemCollection").collection("CraftItemCollection");
-        
+
 
         app.get('/addCraftItem', async (req, res) => {
             const cursor = newCraftItemCollection.find()
             const result = await cursor.toArray();
             res.send(result);
         })
-        
+
+        app.get('/myList/:email', async (req, res) => {
+            // console.log(req.params.email)
+            const result = await newCraftItemCollection.find({ email: req.params.email }).toArray();
+            res.send(result);
+        })
+
         app.post('/addCraftItem', async (req, res) => {
             const newCraftItem = req.body;
             console.log(newCraftItem);
