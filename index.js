@@ -29,6 +29,19 @@ async function run() {
         const newCraftItemCollection = client.db("CraftItemCollection").collection("CraftItemCollection");
 
 
+        const allArtandCraftCollection = client.db("CraftItemCollection").collection("AllArtandCraftCollection");
+        // console.log(allArtandCraftCollection)
+
+        // allArtandCraftCollection data
+        app.get('/allArtandCraft', async (req, res) => {
+            const cursor = allArtandCraftCollection.find()
+            const result = await cursor.toArray();
+            res.send(result);
+            
+        })
+
+
+
         app.get('/addCraftItem', async (req, res) => {
             const cursor = newCraftItemCollection.find()
             const result = await cursor.toArray();
