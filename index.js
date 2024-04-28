@@ -3,7 +3,7 @@ const cors = require('cors');
 const app = express()
 require('dotenv').config()
 const port = process.env.PORT || 5000
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 // middle ware
 app.use(cors())
@@ -35,6 +35,13 @@ async function run() {
             res.send(result);
         })
 
+        app.get('/addCraftItem/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await newCraftItemCollection.findOne(query);
+            res.send(result);
+        })
+
         app.get('/myList/:email', async (req, res) => {
             // console.log(req.params.email)
             const result = await newCraftItemCollection.find({ email: req.params.email }).toArray();
@@ -47,6 +54,31 @@ async function run() {
             const result = await newCraftItemCollection.insertOne(newCraftItem);
             res.send(result);
         })
+
+        // update item value
+        app.put('/addCraftItem/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) };
+            const options = { upsert: true };
+            const updatedItem = req.body;
+            const Item = {
+                $set: {
+                    image: updatedItem.image,
+                    item_name: updatedItem.item_name,
+                    subcategory_Name: updatedItem.subcategory_Name,
+                    short_description: updatedItem.short_description,
+                    price: updatedItem.price,
+                    rating: updatedItem.rating,
+                    customization: updatedItem.customization,
+                    processing_time: updatedItem.processing_time,
+                    stockStatus: updatedItem.stockStatus
+                }
+            }
+            const result = await newCraftItemCollection.updateOne(filter, Item, options);
+            res.send(result);
+        })
+
+
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
