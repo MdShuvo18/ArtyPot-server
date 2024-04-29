@@ -32,13 +32,32 @@ async function run() {
         const allArtandCraftCollection = client.db("CraftItemCollection").collection("AllArtandCraftCollection");
         // console.log(allArtandCraftCollection)
 
+        const clayMadePotteryCollection = client.db("CraftItemCollection").collection("CLAY_MADE_POTTERY");
+
         // allArtandCraftCollection data
         app.get('/allArtandCraft', async (req, res) => {
             const cursor = allArtandCraftCollection.find()
             const result = await cursor.toArray();
             res.send(result);
-            
+
         })
+
+        // subcategory section data get 
+        app.get('/subcategorysection/:subcategory_Name', async (req, res) => {
+            const subcategory_Name = req.params.subcategory_Name
+            console.log(subcategory_Name)
+            const query = { subcategory_Name: subcategory_Name }
+            const result = await newCraftItemCollection.find(query).toArray();
+            res.send(result);
+        })
+
+        // clayMadePotteryCollection data
+        app.get('/claymadepoterry', async (req, res) => {
+            const cursor = clayMadePotteryCollection.find()
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
 
 
 
